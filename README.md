@@ -1,5 +1,5 @@
 # SWAGLABS demo
-My weapon of choice for this task has been Cypress.
+My Weapon of choice for this task has been Cypress.
 I've also added the cucumber plugin to follow a process that respects user scenarios
 
 ## Installing the demo

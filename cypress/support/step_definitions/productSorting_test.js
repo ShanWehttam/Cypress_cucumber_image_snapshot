@@ -13,6 +13,7 @@ When('I sort the products by price', () => {
 
 When('I sort the products by name', () => {
   cy.get('select').select('az')
+  cy.matchImageSnapshot()
 });
 
 Then('I should see the products listed in ascending price order', () => {
@@ -28,9 +29,9 @@ Then('I should not see the products listed in ascending price order', () => {
     console.log(prices)
     prices = prices.text().split("$").filter(Boolean)
     console.log(prices)
-    const ordered_prices = prices.sort(ascending)
-    console.log(ordered_prices)   
-    expect(prices).not.to.equal(["29.99", "9.99", "15.99", "49.99", "7.99", "15.99"])  
+    const ordered_prices = [...prices.sort(ascending)]
+    console.log(ordered_prices)
+    expect(prices).not.to.equal(ordered_prices)  
     // Cypress should accept ordered_prices but doesn't.  This must be a bug with Cypress.
     // I've had to provide an explicit array as an argument which isn't great :(
   })

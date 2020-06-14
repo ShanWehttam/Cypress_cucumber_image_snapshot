@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cy:open": "cypress open"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "mochawesome": "^4.0.1",
     "mochawesome-merge": "^2.0.1",
     "mochawesome-report-generator": "^4.0.1"
+  },
+  "dependencies": {
+    "cypress-image-snapshot": "^3.1.1"
   }
 }

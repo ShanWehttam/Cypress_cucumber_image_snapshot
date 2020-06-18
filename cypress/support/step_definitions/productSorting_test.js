@@ -1,10 +1,13 @@
-import { logIn, visit, ascending } from '../index.js'
+import {visit} from '../index.js'
 
 
 When('I log in', () => {
+  cy.log("JONES")
+
   cy.getCookies()
-  visit("/")
-  logIn({username: 'standard_user', password: 'secret_sauce'})
+  cy.users().then( credentials => {
+    cy.logIn(credentials)
+  })
 });
 
 When('I sort the products by price', () => {
@@ -13,26 +16,13 @@ When('I sort the products by price', () => {
 
 When('I sort the products by name', () => {
   cy.get('select').select('az')
-  cy.matchImageSnapshot()
+  // cy.matchImageSnapshot()
 });
 
 Then('I should see the products listed in ascending price order', () => {
-  cy.get('.inventory_item_price').then(prices => {
-    prices = prices.text().split("$").filter(Boolean)
-    cy.log(prices)
-    expect(prices).to.eql(prices.sort(ascending))
-  })
+  cy.listingOrder('ascending order')
 });
 
 Then('I should not see the products listed in ascending price order', () => {
-  cy.get('.inventory_item_price').should(prices => {
-    console.log(prices)
-    prices = prices.text().split("$").filter(Boolean)
-    console.log(prices)
-    const ordered_prices = [...prices.sort(ascending)]
-    console.log(ordered_prices)
-    expect(prices).not.to.equal(ordered_prices)  
-    // Cypress should accept ordered_prices but doesn't.  This must be a bug with Cypress.
-    // I've had to provide an explicit array as an argument which isn't great :(
-  })
-});
+  cy.listingOrder('random order')
+ })

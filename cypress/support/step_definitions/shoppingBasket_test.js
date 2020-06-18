@@ -1,6 +1,8 @@
-import { addMultipleItems, logIn, visit, products, resetState } from '../index.js'
+import { logIn, visit } from '../index.js'
 
 Given('I log in', () => {
+  cy.log("JONES")
+  cy.location("pathname")
   cy.getCookies()
   visit("/")
   logIn()
@@ -14,53 +16,37 @@ Given('I log in', () => {
 // });
 
 When('I add more than one product to the basket', () => {
-  addMultipleItems({})
+  cy.addMultipleItems()
+  /* THE BELOW TECHNIQUE ISN"T READABLE AND SEEMS OVERKILL
+       getItemPrices is something that can be done in the background
+  cy.getItemPrices().then( prices => {  getItemPrices has nothing to do with the test
+    cy.addMultipleItems(prices)
+  })
+  */
 });
 
 When('I view my basket after adding more than one product', () => {
-  addMultipleItems({})
+  cy.addMultipleItems()
   cy.get('#shopping_cart_container').click()
 });
 
 When('I sort the products by name', () => {
-  cy.get('select').select('az')
+  // cy.get('select').select('az')
 });
 
-function removeCheapestItem(){
-  cy.document().then( doc => {
-    let prices = [...doc.querySelectorAll('.inventory_item_price')].map( price => price.textContent)
-    console.log(prices)
-    let cheapest = Math.min(...prices)
-    console.log('bertha', cheapest)
-    cy.contains(cheapest).next().click()
-  })
-}
+
 
 When('I remove the cheapest item', () => {
   // cy.get('select').select('az').as('jim')
   // cy.get('@jim')
-  removeCheapestItem()
+
+  cy.removeCheapestItem()
 });
 
 Then('I should see that the items have been added to the basket', () => {
-  cy.log(products)
-  cy.get('#shopping_cart_container').click()
-  cy.document().then( doc => {
-    let prices = [...doc.querySelectorAll('.inventory_item_price')].map(arg => parseFloat(arg.textContent))
-    resetState()
-    // cy.wrap(prices).should('have.members', products)
-    console.log(products)
-    expect(prices).to.eql(products)
-  })
+  cy.checkBasketContents("items added")
 });
 
 Then('I should no longer see the item in my basket', () => {
-  cy.document().then( doc => {
-    let prices = 
-    [...doc.querySelectorAll('.inventory_item_price')]
-    .map( price => price.textContent)
-    let cheapest = Math.min(...prices)
-    resetState()
-    expect(prices).not.to.include(cheapest)
-  })
+  cy.checkBasketContents("one removed")
 });

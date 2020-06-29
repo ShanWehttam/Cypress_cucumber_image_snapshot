@@ -71,7 +71,6 @@ Cypress.Commands.add('logIn', (credentials) => {
   });
   cy.server();
   cy.route("**/inventory.html").as("signup");
-
   cy.location("pathname", { log: false }).then((currentPath) => {
     cy.log("paaattatatata", currentPath)
     if (currentPath === "/cart.html"){
@@ -113,12 +112,6 @@ Cypress.Commands.add('listingOrder', (order_type) => {
 })
 
 
-
-
-
-  
-
-
 // const getItemPrices = () => cy.get('.inventory_item_price').then( prices => { return prices.text() })
 
 // Cypress.Commands.add('getItemPrices', () => {
@@ -140,42 +133,36 @@ Cypress.Commands.add('listingOrder', (order_type) => {
 //   })    
 // });
 
-    let products = []
+let products = []
 const addItems = {
   "cheapest"(prices, numberOfItems) {
     cy.pause()
-      console.log(prices, numberOfItems)
-      let product_count = 0
-      while (product_count < numberOfItems) {
-        product_count += 1
-        let cheapest = Math.min(...prices)
-        console.log("cheapest", cheapest)
-        products.push(cheapest)
-        prices = prices.filter(arg => arg !== cheapest)
-        console.log(prices)
-        cy.contains(cheapest).next().click()
-      }
+    console.log(prices, numberOfItems)
+    let product_count = 0
+    while (product_count < numberOfItems) {
+      product_count += 1
+      let cheapest = Math.min(...prices)
+      console.log("cheapest", cheapest)
+      products.push(cheapest)
+      prices = prices.filter(arg => arg !== cheapest)
+      console.log(prices)
+      cy.contains(cheapest).next().click()
     }
-
+  }
 }
 
 Cypress.Commands.add('addMultipleItems', (numberOfItems=2, value="cheapest") => {
   const log = Cypress.log({
     name: "adding multiple items",
     displayName: "Adding multiple items",
-    message: [`🔐 adding more than one item to the basket | ${numberOfItems}`],
+    message: [`🔐 adding ${numberOfItems} of the ${value} items to the basket | `],
     // autoEnd: false,
   });
-  
   getItemPrices().then( prices => {
     cy.log("PRICES", prices)
     addItems["cheapest"](prices, numberOfItems)
- } )
-
-
+  })
 })
-
-
 
 // export function resetter(){
 //   console.log("RESETTING STATE")
@@ -186,9 +173,6 @@ Cypress.Commands.add('addMultipleItems', (numberOfItems=2, value="cheapest") => 
 //   cy.contains('All Items').click()
 //   console.log("FIISHED RESETTING STATE")
 // }
-
-
- 
 
 const basketContents = {
   "one removed"() {
@@ -218,12 +202,11 @@ Cypress.Commands.add('checkBasketContents', (basket = 'empty') => {
   basketContents[basket]()
 })
 
-
 let cheapest;
 Cypress.Commands.add('removeCheapestItem', () => {
     getItemPrices().then( prices => {
-    let cheapest = Math.min(...prices)
-    console.log('bertha', cheapest)
-    cy.contains(cheapest).next().click()
+      let cheapest = Math.min(...prices)
+      console.log('bertha', cheapest)
+      cy.contains(cheapest).next().click()
   }).then( arg => {return cheapest})
 })

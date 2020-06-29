@@ -34,12 +34,9 @@ When('I sort the products by name', () => {
   // cy.get('select').select('az')
 });
 
-
-
 When('I remove the cheapest item', () => {
   // cy.get('select').select('az').as('jim')
   // cy.get('@jim')
-
   cy.removeCheapestItem()
 });
 
